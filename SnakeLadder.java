@@ -1,17 +1,35 @@
 package com.java.day4;
 
 public class SnakeLadder {
+  public static void main(String[] ar) throws InterruptedException {
+
+    Player p1 = new Player("John");   //creating 2 objects(players) of Player class
+    Player p2 = new Player("Ken");
+    Player[] players = {p1, p2};    //storing the references of players in a Player type array
+
+    new GamePlay(players);    //passing the players to the constructor of GamePlay class to begin the gameplay.
+  }
+}
+
+class GamePlay {
   final static byte OPTION_NO_PLAY = 0;
   final static byte OPTION_SNAKE = 1;
   final static byte OPTION_LADDER = 2;
+  static Player[] players;
+  Player currentPlayer;
+  short dieRollTimes = 0;
 
-  public static void main(String[] args) throws InterruptedException {
-    byte position = 0;
-    boolean flag = false;
-    short dieRollTimes = 0;
-    System.out.println("The starting position of the player is " + position);
+  GamePlay(Player[] players) throws InterruptedException {
+    GamePlay.players = players;
+    currentPlayer = players[0];
 
-    while (position < 100) {
+    startGame();
+  }
+
+  void startGame() throws InterruptedException {
+    System.out.println("Snake and Ladder game is starting now.");
+
+    do {
       byte dieRollNum = (byte) ((Math.random() * 10) % 6 + 1);
       dieRollTimes++;
       System.out.println("#" + dieRollTimes + " the die shows " + dieRollNum);
@@ -21,37 +39,65 @@ public class SnakeLadder {
       switch (playOption) {
 
         case OPTION_NO_PLAY:
-          System.out.println("The player not playing. staying at " + position + "\n");
+          System.out.println(currentPlayer.name + " not playing. staying at " + currentPlayer.position + "\n");
+          switchPlayer();
           break;
 
         case OPTION_SNAKE:
-          position -= dieRollNum;
-          if (position <= 0) {
-            position = 0;
-            if (flag) {
-              flag = false;
-              System.out.println("stepped on snake and we're right back where we started. but we wont give up\n");
+          currentPlayer.position -= dieRollNum;
+          if (currentPlayer.position <= 0) {
+            currentPlayer.position = 0;
+            if (currentPlayer.flag) {
+              currentPlayer.flag = false;
+              System.out.println("stepped on snake and " + currentPlayer.name + "'s right back where " + currentPlayer.name + " started. but " + currentPlayer.name + " wont give up\n");
+              switchPlayer();
               continue;
             }
           }
-          System.out.println("Aww. stepped on snake. going back to " + position + " :( \n");
+          System.out.println("Aww. " + currentPlayer.name + " stepped on snake. going back to " + currentPlayer.position + " :( \n");
+          switchPlayer();
           break;
 
         case OPTION_LADDER:
-          flag = true;
-          if (position + dieRollNum <= 100) {
-            position += dieRollNum;
+          currentPlayer.flag = true;
+          if (currentPlayer.position + dieRollNum <= 100) {
+            currentPlayer.position += dieRollNum;
 
-            System.out.println("Yay! Ladder. off we go to position " + position + " :) \n");
+            System.out.println("Yay! Ladder. off " + currentPlayer.name + " goes to position " + currentPlayer.position + " :) \n");
             continue;
           }
-          System.out.println("welp. guess we'll just stay at " + position + " until we get " + (100 - position) + "\n");
+          System.out.println("welp. guess " + currentPlayer.name + " will just stay at " + currentPlayer.position + " until "
+            + currentPlayer.name + " gets " + (100 - currentPlayer.position) + "\n");
           break;
-
       }
       Thread.sleep(10);
-    }
-    System.out.println("whew! it took " + dieRollTimes + " die rolls to finally win");
 
+    } while (currentPlayer.position < 100);
+
+    System.out.println("whew! it took " + dieRollTimes + " die rolls in total and "+ currentPlayer.name+" finally won");
+  }
+
+  void switchPlayer() {
+    System.out.println(
+      players[0].name + "'s position " + players[0].position + ". " + players[1].name + "'s position " + players[1].position);
+
+    if (currentPlayer == players[0]) {
+      currentPlayer = players[1];
+    } else {
+      currentPlayer = players[0];
+    }
+
+    System.out.println(currentPlayer.name + "'s turn now \n");
+  }
+
+}
+
+class Player {
+  String name;
+  boolean flag = false;
+  byte position = 0;
+
+  Player(String name) {   //accepting player's name in a parameterized constructor.
+    this.name = name;
   }
 }
