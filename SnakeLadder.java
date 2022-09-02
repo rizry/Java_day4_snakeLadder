@@ -17,6 +17,7 @@ public class SnakeLadder {
       byte playOption = (byte) ((Math.random() * 10) % 3);
 
       switch (playOption) {
+      
         case OPTION_NO_PLAY:
           System.out.println("The player not playing. staying at " + position + "\n");
           break;
@@ -33,17 +34,21 @@ public class SnakeLadder {
           }
           System.out.println("Aww. stepped on snake. going back to " + position + " :( \n");
           break;
-        
+
         case OPTION_LADDER:
-          position += dieRollNum;
           flag = true;
-          if (position > 100) position = 100;
-          System.out.println("Yay! Ladder. off we go to position " + position + " :) \n");
+          if (position + dieRollNum <= 100) {
+            position += dieRollNum;
+
+            System.out.println("Yay! Ladder. off we go to position " + position + " :) \n");
+            continue;
+          }
+          System.out.println("welp. guess we'll just stay at " + position + " until we get " + (100 - position) + "\n");
           break;
-      }
-      Thread.sleep(30);
+        
+        }
+      Thread.sleep(20);
+
     }
-
   }
-
 }
