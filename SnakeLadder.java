@@ -8,20 +8,22 @@ public class SnakeLadder {
   public static void main(String[] args) throws InterruptedException {
     byte position = 0;
     boolean flag = false;
+    short dieRollTimes = 0;
     System.out.println("The starting position of the player is " + position);
 
     while (position < 100) {
       byte dieRollNum = (byte) ((Math.random() * 10) % 6 + 1);
-      System.out.println("the die shows " + dieRollNum);
+      dieRollTimes++;
+      System.out.println("#" + dieRollTimes + " the die shows " + dieRollNum);
 
       byte playOption = (byte) ((Math.random() * 10) % 3);
 
       switch (playOption) {
-      
+
         case OPTION_NO_PLAY:
           System.out.println("The player not playing. staying at " + position + "\n");
           break;
-        
+
         case OPTION_SNAKE:
           position -= dieRollNum;
           if (position <= 0) {
@@ -45,10 +47,11 @@ public class SnakeLadder {
           }
           System.out.println("welp. guess we'll just stay at " + position + " until we get " + (100 - position) + "\n");
           break;
-        
-        }
-      Thread.sleep(20);
 
+      }
+      Thread.sleep(10);
     }
+    System.out.println("whew! it took " + dieRollTimes + " die rolls to finally win");
+
   }
 }
